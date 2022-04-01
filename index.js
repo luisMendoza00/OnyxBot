@@ -4,6 +4,18 @@ require('dotenv').config();
 
 const client = new Client({ intents: [Intents.FLAGS.GUILDS] });
 
+const eventFiles = fs.readdirSync('./events/').filter(file => file.endsWith('.js'));
+
+for (const file of eventFiles) {
+    const event = require(`./events/${file}`);
+    if (event.once) {
+        client.once(event.name, (...args) => event.execute(client, ...args));
+    }
+    else {
+        client.on(event.name, (...args) => event.execute(client, ...args));
+    }
+}
+
 // client.functions = new Collection();
 // const functionFiles = fs.readdirSync('./functions').filter(file => file.endsWith('.js'));
 
@@ -11,13 +23,5 @@ const client = new Client({ intents: [Intents.FLAGS.GUILDS] });
 //     const functions = require(`./functions/${file}`);
 //     client.functions.set(functions.id, functions.exports);
 // }
-
-client.once('ready', () => {
-    console.log('Ready!');
-});
-
-client.on('message', (message) => {
-    console.log(message.content);
-});
 
 client.login(process.env.TOKEN);

@@ -1,5 +1,8 @@
-module.exports = function searchCards() {
-    console.log('searchCards');
+module.exports = {
+    name: 'searchCards',
+    execute() {
+        console.log('searchCards');
+    },
 };
 
 module.id = 'searchCards';
